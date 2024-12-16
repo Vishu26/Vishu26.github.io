@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="DESCRIPTION META TAG">
+  <meta property="og:title" content="BirdSAT"/>
+  <meta property="og:description" content="BirdSAT: Cross-View MAE for SDM"/>
+  <meta property="og:url" content="URL OF THE WEBSITE"/>
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/image/your_banner_image.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+
+  <meta name="twitter:title" content="TWITTER BANNER TITLE META TAG">
+  <meta name="twitter:description" content="TWITTER BANNER DESCRIPTION META TAG">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/your_twitter_banner_image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="diffusion-models, remote sensing, satellite-imagery">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>BirdSAT</title>
+  <link rel="icon" type="image/x-icon" href="">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script
+	type="module"
+	src="https://gradio.s3-us-west-2.amazonaws.com/4.25.0/gradio.js"
+></script>
+</head>
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">BirdSAT: Cross-View Contrastive Masked Autoencoders for Bird Species Classification and Mapping</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://vishu26.github.io" target="_blank">Srikumar Sastry</a>,</span>
+                <span class="author-block">
+                  <a href="https://subash-khanal.github.io/" target="_blank">Subash Khanal</a>,</span>
+                  <span class="author-block">
+                    <a href="https://sites.wustl.edu/aayush/" target="_blank">Aayush Dhakal</a>,
+                  </span>
+                  <span class="author-block">
+                    <a href="" target="_blank">Di Huang</a>,
+                  </span>
+                  <span class="author-block">
+                    <a href="https://jacobsn.github.io/" target="_blank">Nathan Jacobs</a>
+                  </span>
+                  </div>
+
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block">Washington University<br>WACV, 2024</span>
+                  </div>
+
+                  <div class="column has-text-centered">
+                    <div class="publication-links">
+                         <!-- Arxiv PDF link -->
+                      <span class="link-block">
+                        <a href="https://openaccess.thecvf.com/content/WACV2024/papers/Sastry_BirdSAT_Cross-View_Contrastive_Masked_Autoencoders_for_Bird_Species_Classification_and_WACV_2024_paper.pdf" target="_blank"
+                        class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="fas fa-file-pdf"></i>
+                        </span>
+                        <span>Paper</span>
+                      </a>
+                    </span>
+                  
+                    <span class="link-block">
+                      <a href="https://github.com/mvrl/BirdSAT?tab=readme-ov-file#%EF%B8%8F-pretrained-models" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="fab fa-github"></i>
+                        </span>
+                        <span>Models</span>
+                      </a>
+                    </span>
+
+                  <!-- Github link -->
+                  <span class="link-block">
+                    <a href="https://github.com/mvrl/BirdSAT" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>GitHub</span>
+                  </a>
+                </span>
+
+              <span class="link-block">
+                <a href="https://wustl.box.com/s/jtt1xbap6xpzvqfbeedq0wxu5ciqqc7a" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fas fa-database"></i>
+                </span>
+                <span>Datasets</span>
+              </a>
+            </span>
+
+                <!-- ArXiv abstract Link -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2310.19168" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We propose a metadata-aware self-supervised learning~(SSL)~framework useful for fine-grained classification and ecological mapping of bird species around the world. Our framework unifies two SSL strategies: Contrastive Learning~(CL) and Masked Image Modeling~(MIM), while also enriching the embedding space with metadata available with ground-level imagery of birds. We separately train uni-modal and cross-modal ViT on a novel cross-view global bird species dataset containing ground-level imagery, metadata (location, time), and corresponding satellite imagery. We demonstrate that our models learn fine-grained and geographically conditioned features of birds, by evaluating on two downstream tasks: fine-grained visual classification~(FGVC) and cross-modal retrieval. Pre-trained models learned using our framework achieve SotA performance on FGVC of iNAT-2021 birds as well as in transfer learning settings for CUB-200-2011 and NABirds datasets. Moreover, the impressive cross-modal retrieval performance of our model enables the creation of species distribution maps across any geographic region.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">🦢 Dataset Released: Cross-View iNAT Birds 2021</h2>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          
+          <!-- First Image -->
+          <div class="publication-image" id="image-container-1">
+            <img src="static/images/data.png" alt="method">
+            <h3>
+              This cross-view birds species dataset consists of paired ground-level bird images and satellite images, along with meta-information associated with the iNaturalist-2021 dataset.
+            </h3>
+          </div>         
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">⚙️ Method</h2>
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <!-- First Image -->
+          <div class="publication-image" id="image-container-1">
+            <img src="static/images/arch-2.png" alt="method">
+            <h3>
+              We systematically evaluate various cross-view training strategies of masked autoencoders on ground-level bird images, satellite images and metadata. Further, we compare the performance of our models with the state-of-the-art on fine-grained image classification and cross-modal retrieval tasks.
+            </h3>
+          </div>         
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">🧪 Results</h2>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <!-- First Image -->
+          <div class="publication-image" id="image-container-1">
+            <img src="static/images/ret_results-2048x1504.jpg" alt="method">
+            <h3>
+              Bird image to satellite image retrieval examples.
+            </h3>
+          </div>         
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@inproceedings{sastry2024birdsat,
+title={BirdSAT: Cross-View Contrastive Masked Autoencoders for Bird Species Classification and Mapping},
+author={Srikumar, Sastry and Subash, Khanal and Aayush, Dhakal and Huang, Di and Nathan, Jacobs},
+booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+year={2024}
+}</code></pre>
+    </div>
+</section>
+<!--End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            You are free to borrow the of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+  
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+  </body>
+  </html>
