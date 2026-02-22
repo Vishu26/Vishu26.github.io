@@ -787,10 +787,60 @@ recent state-of-the-art models to encode geotagged audio, a textual description 
     </table>
     <script>
       (function () {
-        // Shared tracking pixel (global across visitors, not client-local).
-        var pixel = new Image();
-        pixel.referrerPolicy = 'no-referrer-when-downgrade';
-        pixel.src = 'https://www.mapmyuser.com/noimg.gif?t=' + Date.now();
+        var STORE_URL = 'https://jsonblob.com/api/jsonBlob/019c8687-fbe8-7a33-97b7-70ba4232655a';
+
+        function slugify(value) {
+          return String(value || 'unknown')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 80);
+        }
+
+        function getGeo() {
+          return fetch('https://ipapi.co/json/')
+            .then(function (r) { return r.json(); })
+            .then(function (geo) {
+              var lat = Number(geo && geo.latitude);
+              var lng = Number(geo && geo.longitude);
+              if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+              return {
+                lat: Number(lat.toFixed(4)),
+                lng: Number(lng.toFixed(4)),
+                city: geo.city || 'Unknown city',
+                country: geo.country_name || 'Unknown country'
+              };
+            })
+            .catch(function () { return null; });
+        }
+
+        function updateStore(point) {
+          var cityKey = slugify(point.city) + '|' + slugify(point.country);
+          return fetch(STORE_URL)
+            .then(function (r) { return r.json(); })
+            .then(function (doc) {
+              var data = doc && typeof doc === 'object' ? doc : {};
+              var points = data.points && typeof data.points === 'object' ? data.points : {};
+              var existing = points[cityKey] || { city: point.city, country: point.country, lat: point.lat, lng: point.lng, count: 0 };
+              existing.count = (parseInt(existing.count, 10) || 0) + 1;
+              existing.lat = point.lat;
+              existing.lng = point.lng;
+              existing.city = point.city;
+              existing.country = point.country;
+              points[cityKey] = existing;
+              return fetch(STORE_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ points: points, updatedAt: Date.now() })
+              });
+            })
+            .catch(function () {});
+        }
+
+        getGeo().then(function (point) {
+          if (!point) return;
+          updateStore(point);
+        });
       })();
     </script>
   </body>

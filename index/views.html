@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
-      #map-frame {
+      #map {
         width: 100%;
         height: 600px;
         max-width: 800px;
@@ -56,17 +57,54 @@
           <p class="page-title" style="font-size:1.5rem;">Views counter</p>
           <p class="back-link"><a href="../index.html">← Back to home</a></p>
           <div class="map-container">
-            <div id="views-badge" class="views-badge" aria-live="polite">Global city-level views map</div>
-            <iframe
-              id="map-frame"
-              title="City-level views map"
-              src="https://www.mapmyuser.com/site/vishu26.github.io"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+            <div id="views-badge" class="views-badge" aria-live="polite">Loading global city-level views...</div>
+            <div id="map"></div>
           </div>
         </td>
       </tr>
     </tbody></table>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+      (function () {
+        var STORE_URL = 'https://jsonblob.com/api/jsonBlob/019c8687-fbe8-7a33-97b7-70ba4232655a';
+        var badge = document.getElementById('views-badge');
+        var map = L.map('map').setView([20, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        function addMarker(entry) {
+          var count = parseInt(entry.count, 10) || 0;
+          if (!Number.isFinite(entry.lat) || !Number.isFinite(entry.lng) || count <= 0) return null;
+          var radius = Math.min(24, 5 + Math.log(count + 1) * 2.5);
+          return L.circleMarker([entry.lat, entry.lng], {
+            radius: radius,
+            color: '#0d47a1',
+            weight: 1,
+            fillColor: '#1772d0',
+            fillOpacity: 0.65
+          }).addTo(map).bindPopup(entry.city + ', ' + entry.country + ': ' + count + ' view' + (count === 1 ? '' : 's'));
+        }
+
+        fetch(STORE_URL)
+          .then(function (r) { return r.json(); })
+          .then(function (doc) {
+            var pointsObj = doc && doc.points && typeof doc.points === 'object' ? doc.points : {};
+            var points = Object.keys(pointsObj).map(function (k) { return pointsObj[k]; });
+            var total = points.reduce(function (acc, p) { return acc + (parseInt(p.count, 10) || 0); }, 0);
+            var markers = points.map(addMarker).filter(Boolean);
+
+            badge.textContent = total + ' total views across ' + markers.length + ' cit' + (markers.length === 1 ? 'y' : 'ies');
+
+            if (markers.length === 0) return;
+            var bounds = L.latLngBounds(points.map(function (p) { return [p.lat, p.lng]; }));
+            if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24] });
+          })
+          .catch(function () {
+            badge.textContent = 'Unable to load global views right now';
+          });
+      })();
+    </script>
   </body>
 </html>
