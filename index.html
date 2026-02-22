@@ -787,42 +787,10 @@ recent state-of-the-art models to encode geotagged audio, a textual description 
     </table>
     <script>
       (function () {
-        var pointsKey = 'homepage_view_points';
-        var localKey = 'homepage_views_local';
-        var localCount = parseInt(localStorage.getItem(localKey) || '0', 10);
-        localStorage.setItem(localKey, String((Number.isFinite(localCount) ? localCount : 0) + 1));
-
-        fetch('https://ipapi.co/json/')
-          .then(function (response) { return response.json(); })
-          .then(function (geo) {
-            if (!geo) return;
-            var lat = Number(geo.latitude);
-            var lng = Number(geo.longitude);
-            if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-
-            var rawPoints = localStorage.getItem(pointsKey);
-            var points = [];
-            try {
-              points = rawPoints ? JSON.parse(rawPoints) : [];
-            } catch (e) {
-              points = [];
-            }
-            if (!Array.isArray(points)) points = [];
-
-            points.push({
-              lat: lat,
-              lng: lng,
-              city: geo.city || 'Unknown city',
-              country: geo.country_name || 'Unknown country',
-              t: Date.now()
-            });
-
-            if (points.length > 1000) {
-              points = points.slice(points.length - 1000);
-            }
-            localStorage.setItem(pointsKey, JSON.stringify(points));
-          })
-          .catch(function () {});
+        // Shared tracking pixel (global across visitors, not client-local).
+        var pixel = new Image();
+        pixel.referrerPolicy = 'no-referrer-when-downgrade';
+        pixel.src = 'https://www.mapmyuser.com/noimg.gif?t=' + Date.now();
       })();
     </script>
   </body>

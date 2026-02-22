@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="../stylesheet.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
-      #map {
+      #map-frame {
         width: 100%;
-        height: 400px;
+        height: 600px;
         max-width: 800px;
         margin: 20px auto;
         border-radius: 8px;
@@ -57,93 +56,17 @@
           <p class="page-title" style="font-size:1.5rem;">Views counter</p>
           <p class="back-link"><a href="../index.html">← Back to home</a></p>
           <div class="map-container">
-            <div id="views-badge" class="views-badge" aria-live="polite">Loading…</div>
-            <div id="map"></div>
+            <div id="views-badge" class="views-badge" aria-live="polite">Global city-level views map</div>
+            <iframe
+              id="map-frame"
+              title="City-level views map"
+              src="https://www.mapmyuser.com/site/vishu26.github.io"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
           </div>
         </td>
       </tr>
     </tbody></table>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script>
-      (function () {
-        var MAP_CENTER = [20, 0];
-        var MAP_ZOOM = 2;
-        var POINTS_KEY = 'homepage_view_points';
-
-        var map = L.map('map').setView(MAP_CENTER, MAP_ZOOM);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        var badge = document.getElementById('views-badge');
-
-        function safePoints() {
-          var raw = localStorage.getItem(POINTS_KEY);
-          if (!raw) return [];
-          try {
-            var parsed = JSON.parse(raw);
-            if (!Array.isArray(parsed)) return [];
-            return parsed.filter(function (p) {
-              return p && Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng));
-            });
-          } catch (e) {
-            return [];
-          }
-        }
-
-        function aggregateByCoordinate(points) {
-          var buckets = {};
-          points.forEach(function (p) {
-            var lat = Number(p.lat);
-            var lng = Number(p.lng);
-            var key = lat.toFixed(3) + ',' + lng.toFixed(3);
-            if (!buckets[key]) {
-              buckets[key] = {
-                lat: lat,
-                lng: lng,
-                count: 0,
-                city: p.city || 'Unknown city',
-                country: p.country || 'Unknown country'
-              };
-            }
-            buckets[key].count += 1;
-          });
-          return Object.keys(buckets).map(function (k) { return buckets[k]; });
-        }
-
-        function setBadge(totalViews, locationCount) {
-          badge.textContent = totalViews + ' total views across ' + locationCount + ' location' + (locationCount === 1 ? '' : 's');
-        }
-
-        function addMarker(point) {
-          var views = point.count;
-          var radius = Math.min(24, 5 + Math.log(views + 1) * 2.5);
-          L.circleMarker([point.lat, point.lng], {
-            radius: radius,
-            color: '#0d47a1',
-            weight: 1,
-            fillColor: '#1772d0',
-            fillOpacity: 0.65
-          }).addTo(map).bindPopup(point.city + ', ' + point.country + ': ' + views + ' view' + (views === 1 ? '' : 's'));
-        }
-
-        var points = safePoints();
-        var grouped = aggregateByCoordinate(points);
-
-        if (grouped.length === 0) {
-          badge.textContent = '0 total views';
-          return;
-        }
-
-        grouped.forEach(addMarker);
-        setBadge(points.length, grouped.length);
-
-        var bounds = L.latLngBounds(grouped.map(function (p) { return [p.lat, p.lng]; }));
-        if (bounds.isValid()) {
-          map.fitBounds(bounds, { padding: [24, 24] });
-        }
-      })();
-    </script>
   </body>
 </html>
