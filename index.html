@@ -787,15 +787,9 @@ recent state-of-the-art models to encode geotagged audio, a textual description 
     </table>
     <script>
       (function () {
-        var STORE_URL = 'https://jsonblob.com/api/jsonBlob/019c8687-fbe8-7a33-97b7-70ba4232655a';
-
-        function slugify(value) {
-          return String(value || 'unknown')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '')
-            .slice(0, 80);
-        }
+        var SUPABASE_URL = 'https://aapiijouiukvfqxsqdsc.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhcGlpam91aXVrdmZxeHNxZHNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3ODE0MzUsImV4cCI6MjA4NzM1NzQzNX0.qgpdNwMVSfX9W1gP-ZLj-2_YnNxskcC8Q9nM0K-CEGk';
+        var INSERT_URL = SUPABASE_URL + '/rest/v1/view_points';
 
         function getGeo() {
           return fetch('https://ipapi.co/json/')
@@ -814,32 +808,22 @@ recent state-of-the-art models to encode geotagged audio, a textual description 
             .catch(function () { return null; });
         }
 
-        function updateStore(point) {
-          var cityKey = slugify(point.city) + '|' + slugify(point.country);
-          return fetch(STORE_URL)
-            .then(function (r) { return r.json(); })
-            .then(function (doc) {
-              var data = doc && typeof doc === 'object' ? doc : {};
-              var points = data.points && typeof data.points === 'object' ? data.points : {};
-              var existing = points[cityKey] || { city: point.city, country: point.country, lat: point.lat, lng: point.lng, count: 0 };
-              existing.count = (parseInt(existing.count, 10) || 0) + 1;
-              existing.lat = point.lat;
-              existing.lng = point.lng;
-              existing.city = point.city;
-              existing.country = point.country;
-              points[cityKey] = existing;
-              return fetch(STORE_URL, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ points: points, updatedAt: Date.now() })
-              });
-            })
-            .catch(function () {});
+        function insertViewPoint(point) {
+          return fetch(INSERT_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify([point])
+          }).catch(function () {});
         }
 
         getGeo().then(function (point) {
           if (!point) return;
-          updateStore(point);
+          insertViewPoint(point);
         });
       })();
     </script>

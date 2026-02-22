@@ -66,7 +66,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
       (function () {
-        var STORE_URL = 'https://jsonblob.com/api/jsonBlob/019c8687-fbe8-7a33-97b7-70ba4232655a';
+        var SUPABASE_URL = 'https://aapiijouiukvfqxsqdsc.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhcGlpam91aXVrdmZxeHNxZHNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3ODE0MzUsImV4cCI6MjA4NzM1NzQzNX0.qgpdNwMVSfX9W1gP-ZLj-2_YnNxskcC8Q9nM0K-CEGk';
+        var SELECT_URL = SUPABASE_URL + '/rest/v1/view_points?select=city,country,lat,lng&limit=5000';
         var badge = document.getElementById('views-badge');
         var map = L.map('map').setView([20, 0], 2);
 
@@ -87,22 +89,45 @@
           }).addTo(map).bindPopup(entry.city + ', ' + entry.country + ': ' + count + ' view' + (count === 1 ? '' : 's'));
         }
 
-        fetch(STORE_URL)
-          .then(function (r) { return r.json(); })
-          .then(function (doc) {
-            var pointsObj = doc && doc.points && typeof doc.points === 'object' ? doc.points : {};
-            var points = Object.keys(pointsObj).map(function (k) { return pointsObj[k]; });
-            var total = points.reduce(function (acc, p) { return acc + (parseInt(p.count, 10) || 0); }, 0);
-            var markers = points.map(addMarker).filter(Boolean);
+        function renderFromPointArray(rawPoints) {
+          var grouped = {};
+          (Array.isArray(rawPoints) ? rawPoints : []).forEach(function (p) {
+            var lat = Number(p && p.lat);
+            var lng = Number(p && p.lng);
+            if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+            var city = p.city || 'Unknown city';
+            var country = p.country || 'Unknown country';
+            var key = city + '|' + country;
+            if (!grouped[key]) {
+              grouped[key] = { city: city, country: country, lat: lat, lng: lng, count: 0 };
+            }
+            grouped[key].count += 1;
+          });
 
-            badge.textContent = total + ' total views across ' + markers.length + ' cit' + (markers.length === 1 ? 'y' : 'ies');
+          var points = Object.keys(grouped).map(function (k) { return grouped[k]; });
+          var total = points.reduce(function (acc, p) { return acc + (parseInt(p.count, 10) || 0); }, 0);
+          var markers = points.map(addMarker).filter(Boolean);
+          badge.textContent = total + ' total views across ' + markers.length + ' cit' + (markers.length === 1 ? 'y' : 'ies');
+          if (markers.length === 0) return;
+          var bounds = L.latLngBounds(points.map(function (p) { return [p.lat, p.lng]; }));
+          if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24] });
+        }
 
-            if (markers.length === 0) return;
-            var bounds = L.latLngBounds(points.map(function (p) { return [p.lat, p.lng]; }));
-            if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24] });
+        fetch(SELECT_URL, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+          }
+        })
+          .then(function (r) {
+            if (!r.ok) throw new Error('Supabase query failed');
+            return r.json();
+          })
+          .then(function (rows) {
+            renderFromPointArray(rows);
           })
           .catch(function () {
-            badge.textContent = 'Unable to load global views right now';
+            badge.textContent = 'Unable to load aggregated global views';
           });
       })();
     </script>
