@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Views — Srikumar Sastry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <style>
+      #map {
+        width: 100%;
+        height: 400px;
+        max-width: 800px;
+        margin: 20px auto;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+      .views-badge {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: rgba(255,255,255,0.95);
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: 'Lato', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1772d0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        border: 1px solid #e0e0e0;
+      }
+      .map-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .page-title {
+        text-align: center;
+        margin-top: 24px;
+        margin-bottom: 8px;
+      }
+      .back-link {
+        text-align: center;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <table style="width:100%;max-width:800px;border:0;border-spacing:0;margin-right:auto;margin-left:auto;"><tbody>
+      <tr>
+        <td style="padding:20px">
+          <p class="page-title" style="font-size:1.5rem;">Views counter</p>
+          <p class="back-link"><a href="../index.html">← Back to home</a></p>
+          <div class="map-container">
+            <div id="views-badge" class="views-badge" aria-live="polite">Loading…</div>
+            <div id="map"></div>
+          </div>
+        </td>
+      </tr>
+    </tbody></table>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+      (function () {
+        var MAP_CENTER = [38.6488, -90.3101];
+        var MAP_ZOOM = 4;
+        var COUNT_API_NAMESPACE = 'vishu26.github.io';
+        var COUNT_API_KEY = 'views';
+
+        var map = L.map('map').setView(MAP_CENTER, MAP_ZOOM);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var badge = document.getElementById('views-badge');
+
+        function setCount(value) {
+          var text = value === 1 ? '1 view' : (value + ' views');
+          badge.textContent = text;
+        }
+
+        function onError() {
+          badge.textContent = 'Views unavailable';
+        }
+
+        fetch('https://api.countapi.xyz/get/' + COUNT_API_NAMESPACE + '/' + COUNT_API_KEY)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data && typeof data.value === 'number') {
+              setCount(data.value);
+            } else {
+              onError();
+            }
+          })
+          .catch(onError);
+      })();
+    </script>
+  </body>
+</html>
