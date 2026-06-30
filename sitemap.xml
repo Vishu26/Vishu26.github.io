@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://vishu26.github.io/</loc>
+        <lastmod>2026-06-29</lastmod>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://vishu26.github.io/RCME/</loc>
+        <lastmod>2025-07-01</lastmod>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://vishu26.github.io/prom3e/</loc>
+        <lastmod>2026-03-19</lastmod>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://vishu26.github.io/taxabind/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://vishu26.github.io/birdsat/</loc>
+        <lastmod>2024-12-16</lastmod>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://vishu26.github.io/geosynth/</loc>
+        <lastmod>2024-09-02</lastmod>
+        <priority>0.8</priority>
+    </url>
+</urlset>
