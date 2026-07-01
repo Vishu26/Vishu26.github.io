@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TerraDiT: Scalable Diffusion Transformers for Controllable Satellite Image Synthesis">
+  <title>TerraDiT</title>
+
+  <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="static/css/terradit.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     "NEW & IMPROVED" TOP BANNER  →  links to TerraDiT-Ω
+══════════════════════════════════════════════════════ -->
+<a class="go-topbanner" href="https://brian-j-wei.github.io/terradit-omega/index.html" target="_blank">
+  <span class="go-new-pill">NEW</span>
+  Check out <strong>TerraDiT-&Omega;</strong> (accepted to ECCV 2026) &mdash; our new &amp; improved
+  follow-up with unified spatial control for any geospatial primitive &rarr;
+</a>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO
+     PLACEHOLDER: swap in final title / authors / links once paper is ready
+══════════════════════════════════════════════════════ -->
+<header class="go-hero" id="top">
+  <div class="go-container">
+    <h1 class="go-title">
+      <span class="method-name">TerraDiT</span>: Point-Conditioned Diffusion Transformer<br>
+      for Satellite Image Synthesis
+    </h1>
+    <div class="go-venue">Preprint 2026</div>
+
+    <div class="go-authors">
+      <span><a href="https://vishu26.github.io/" target="_blank">Srikumar Sastry</a><sup>*</sup>,</span>
+      <span><a href="https://dcher95.github.io/" target="_blank">Dan Cher</a><sup>*</sup>,</span>
+      <span><a href="https://brian-j-wei.github.io/" target="_blank">Brian Wei</a><sup>*</sup>,</span>
+      <span><a href="https://sites.wustl.edu/aayush/" target="_blank">Aayush Dhakal</a>,</span>
+      <span><a href="https://subash-khanal.github.io/" target="_blank">Subash Khanal</a>,</span>
+      <span><a href="" target="_blank">Dev Gupta</a>,</span>
+      <span><a href="https://jacobsn.github.io/" target="_blank">Nathan Jacobs</a></span>
+    </div>
+    <div class="go-affiliation">
+      Washington University in St. Louis
+    </div>
+    <div class="go-equal-contrib">
+      <sup>*</sup>Equal contribution
+    </div>
+
+    <div class="go-action-buttons">
+      <a class="go-btn" href="https://arxiv.org/abs/2603.02172" target="_blank">Paper</a>
+      <a class="go-btn" href="https://arxiv.org/abs/2603.02172" target="_blank">arXiv</a>
+      <a class="go-btn" href="https://github.com/mvrl/TerraDiT" target="_blank">Code</a>
+      <span class="go-btn go-btn-disabled">
+        <img class="go-hf-logo" src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face">
+        Weights <span class="placeholder">Coming Soon</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     STICKY NAV
+══════════════════════════════════════════════════════ -->
+<nav class="go-nav">
+  <div class="go-nav-inner">
+    <a class="go-nav-brand" href="#top">TerraDiT</a>
+    <div class="go-nav-links">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#gallery">Results</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     TEASER
+     PLACEHOLDER: drop teaser figure at static/images/teaser.png
+══════════════════════════════════════════════════════ -->
+<section class="go-section" id="teaser">
+  <div class="go-section-inner go-teaser-wrap">
+    <img src="static/images/spatial_prior.jpg" alt="Point prompts, learned spatial prior, and generated satellite images">
+    <p class="go-teaser-caption">
+      TerraDiT synthesizes high-fidelity satellite imagery from
+      <span class="point-blue">point</span> prompts alone&mdash;no dense pixel-level maps required.
+      From the prompts (left), a <em>learned spatial prior</em> (center) localizes each point's
+      influence to drive the generated images (right).
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     ABSTRACT
+     PLACEHOLDER: paste the final abstract text
+══════════════════════════════════════════════════════ -->
+<section class="go-section alt-bg" id="abstract">
+  <div class="go-section-inner">
+    <h2 class="go-section-title">Abstract</h2>
+    <div class="go-section-subtitle">
+      TL;DR &mdash; TerraDiT is a point-conditioned diffusion transformer that generates satellite
+      imagery from text and point locations alone&mdash;no dense pixel-level maps&mdash;via an adaptive
+      local attention mechanism for annotation-efficient, spatially precise control.
+    </div>
+    <p class="go-abstract-text">
+      We propose TerraDiT, a diffusion transformer for text-to-satellite image generation with
+      point-based control, enabling semantically rich and spatially precise generation using only
+      point locations and textual descriptions instead of dense pixel-level maps. TerraDiT introduces
+      an adaptive local attention mechanism to incorporate point queries effectively, achieving
+      state-of-the-art performance while providing a flexible, annotation-efficient, and
+      computationally simple framework for controllable satellite image synthesis.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     METHOD
+     PLACEHOLDER: drop architecture figures + edit the step text
+══════════════════════════════════════════════════════ -->
+<section class="go-section" id="method">
+  <div class="go-section-inner go-wide">
+    <h2 class="go-section-title">Method</h2>
+
+    <div class="go-method-figure">
+      <img src="static/images/point_example_gen.jpg" alt="Point-prompted satellite image generation examples">
+      <p class="go-figure-caption">
+        <strong>Point prompting.</strong> Given only a handful of labeled points (leftmost column)&mdash;e.g.
+        <em>industrial building</em>, <em>parking lot</em>, <em>forest</em>; <em>water</em>; or
+        <em>canal</em>, <em>building</em>, <em>farm</em>&mdash;TerraDiT generates diverse, spatially
+        consistent satellite scenes that honor each point's semantic label and location.
+      </p>
+    </div>
+
+    <!-- KEY CONTRIBUTION: Adaptive Local Attention -->
+    <div class="go-contrib">
+      <span class="go-contrib-tag">Key Contribution</span>
+      <h3>Adaptive Local Attention (ALA)</h3>
+      <p>
+        At the core of TerraDiT is <strong>Adaptive Local Attention (ALA)</strong>, a conditioning
+        mechanism that incorporates point queries into the diffusion transformer effectively. A point
+        (Sin-Cos encoded) and its text caption (from a frozen LongCLIP encoder) are fused and passed
+        through a <strong>MetaRBF module</strong> that predicts a per-point spatial spread
+        (&sigma;<sub>x</sub>,&nbsp;&sigma;<sub>y</sub>). The resulting Gaussian <em>spatial prior</em>
+        modulates the cross-attention between the latent image features (queries) and the conditioning
+        tokens (keys/values), so each point attends locally to the image tokens in its neighborhood.
+        This injects a spatial inductive bias that yields semantically rich, spatially precise
+        generation from sparse point supervision alone&mdash;annotation-efficient and computationally
+        simple while achieving state-of-the-art fidelity.
+      </p>
+    </div>
+
+    <div class="go-method-figure" style="margin-top:22px;">
+      <img src="static/images/ala_block.jpg" alt="Adaptive Local Attention (ALA) block diagram">
+      <p class="go-figure-caption">
+        The Adaptive Local Attention (ALA) block. A point and its caption are encoded and fused, then
+        the MetaRBF module predicts (&sigma;<sub>x</sub>,&nbsp;&sigma;<sub>y</sub>) to form a spatial
+        prior that modulates cross-attention over the latent image features.
+      </p>
+    </div>
+
+    <div class="go-pipeline-steps">
+      <div class="go-pipeline-step">
+        <span class="go-step-num">1</span>
+        <h3>Point Prompting</h3>
+        <p>
+          The scene is specified by a few <strong>labeled points</strong>&mdash;each a location paired
+          with a short text label (e.g. <em>industrial building</em>, <em>water</em>, <em>canal</em>).
+          Points are Sin-Cos encoded and labels embedded via frozen LongCLIP, together specifying
+          <em>what</em> to generate and <em>where</em> without any dense pixel-level maps.
+        </p>
+      </div>
+      <div class="go-pipeline-step is-key">
+        <span class="go-step-num">2</span>
+        <h3>Conditioning &mdash; ALA</h3>
+        <p>
+          <strong>Adaptive Local Attention</strong> injects the point queries into the diffusion
+          transformer: each point attends locally to the image tokens around its location, while text
+          conditions the model through cross-attention&mdash;incorporating point cues precisely and
+          efficiently.
+        </p>
+      </div>
+      <div class="go-pipeline-step">
+        <span class="go-step-num">3</span>
+        <h3>Generation</h3>
+        <p>
+          The conditioned tokens drive a scalable diffusion transformer denoising process to produce
+          the final satellite image.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     RESULTS / GALLERY
+     PLACEHOLDER: drop result figures + fill the table with real numbers
+══════════════════════════════════════════════════════ -->
+<section class="go-section alt-bg" id="gallery">
+  <div class="go-section-inner go-wide">
+    <h2 class="go-section-title">Results</h2>
+
+    <h3 class="go-subsec-title">Qualitative Samples</h3>
+    <div class="go-method-figure">
+      <img src="static/images/geodit_point_prompts.png" alt="Qualitative point-prompted satellite image generations across diverse land-cover types">
+      <p class="go-figure-caption">
+        Each row shows a set of labeled point prompts (leftmost column) and multiple satellite images
+        generated by TerraDiT from them, spanning diverse land-cover types&mdash;residential, water,
+        forest, farmland, canal, sand, highway, golf course, railroad, and sport field.
+      </p>
+    </div>
+
+    <h3 class="go-subsec-title">Quantitative Comparison</h3>
+    <p class="go-section-subtitle">
+      PLACEHOLDER &mdash; replace with your evaluation setup. <strong>Bold</strong> is best,
+      <u>underline</u> is second-best. <em>T</em> = text, <em>P</em> = points.
+    </p>
+    <div class="go-results-table-wrap">
+      <table class="go-results-table">
+        <thead>
+          <tr>
+            <th class="ta-left">Model</th>
+            <th>Condition</th>
+            <th>FID&darr;</th>
+            <th>sFID&darr;</th>
+            <th>LPIPS&darr;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ta-left">GeoSynth</td><td><em>T</em></td>
+            <td>45.59</td><td>18.88</td><td>0.5413</td>
+          </tr>
+          <tr>
+            <td class="ta-left">Text2Earth</td><td><em>T</em></td>
+            <td>25.93</td><td>5.09</td><td>0.4269</td>
+          </tr>
+          <tr class="group-start ours">
+            <td class="ta-left"><strong>TerraDiT-&alpha;-XL (Ours)</strong></td><td><em>T</em></td>
+            <td><u>14.21</u></td><td><u>5.13</u></td><td><u>0.3972</u></td>
+          </tr>
+          <tr class="ours">
+            <td class="ta-left"><strong>TerraDiT-&Sigma;-XL (Ours)</strong></td><td><em>T+P</em></td>
+            <td><strong>12.01</strong></td><td><strong>5.09</strong></td><td><strong>0.3779</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-caption">
+      PLACEHOLDER &mdash; verify these numbers against the paper (values shown are carried over from the
+      TerraDiT-&Omega; comparison table for reference).
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     BIBTEX
+     PLACEHOLDER: update with the final citation
+══════════════════════════════════════════════════════ -->
+<section class="go-section" id="bibtex">
+  <div class="go-section-inner">
+    <h2 class="go-section-title">BibTeX</h2>
+    <div class="go-bibtex-box">
+      <button class="go-bibtex-copy" id="bibtexCopy" type="button" title="Copy to clipboard">
+        Copy
+      </button>
+<pre id="bibtexContent">@article{sastry2026terradit,
+  title   = {TerraDiT: Point-Conditioned Diffusion Transformer for Satellite Image Synthesis},
+  author  = {Sastry, Srikumar and Cher, Dan and Wei, Brian and Dhakal, Aayush and
+             Khanal, Subash and Gupta, Dev and Jacobs, Nathan},
+  journal = {arXiv preprint arXiv:2603.02172},
+  year    = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════ -->
+<footer class="go-footer">
+  See also our follow-up:
+  <a href="https://brian-j-wei.github.io/terradit-omega/index.html" target="_blank">TerraDiT-&Omega;</a>.
+</footer>
+
+<script>
+(function () {
+  const bibtexCopy = document.getElementById('bibtexCopy');
+  const bibtexContent = document.getElementById('bibtexContent');
+  if (!bibtexCopy || !bibtexContent) return;
+
+  const showCopied = () => {
+    bibtexCopy.classList.add('copied');
+    bibtexCopy.textContent = 'Copied';
+    setTimeout(() => {
+      bibtexCopy.classList.remove('copied');
+      bibtexCopy.textContent = 'Copy';
+    }, 1800);
+  };
+  const fallbackCopy = (text) => {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta); showCopied();
+    } catch (e) {}
+  };
+  bibtexCopy.addEventListener('click', () => {
+    const text = bibtexContent.textContent.trim();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
